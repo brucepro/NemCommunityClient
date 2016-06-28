@@ -100,6 +100,7 @@ public class Main {
 
 			final CommandLineParser parser = new PosixParser();
 			final Options options = command.options();
+			options.addOption("secure", false, "prompt for password");
 			final CommandLine commandLine = parser.parse(options, args);
 			command.handle(commandLine);
 			return true;
