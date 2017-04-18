@@ -83,6 +83,6 @@ public class MockTransaction extends Transaction {
 	}
 
 	@Override
-	protected void transfer(final TransactionObserver transactionObserver) {
+	protected void transfer(final TransactionObserver transactionObserver, final TransactionExecutionState state) {
 	}
 }
