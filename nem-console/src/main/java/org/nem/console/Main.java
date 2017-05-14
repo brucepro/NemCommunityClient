@@ -4,10 +4,8 @@ import org.apache.commons.cli.*;
 import org.apache.commons.lang3.ArrayUtils;
 import org.nem.console.commands.*;
 import org.nem.core.model.NetworkInfos;
-import org.nem.core.utils.StringEncoder;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.*;
@@ -35,7 +33,7 @@ public class Main {
 	// (or maybe even allow --cosignatories and then it would be capable of generating multisig tx along with appropriate signatures)
 	public static void main(final String[] args) throws ParseException, IOException {
 		NetworkInfos.setDefault(NetworkInfos.getMainNetworkInfo());
-		// RunDebugScenario();
+//		RunDebugScenario();
 		handle(args);
 	}
 
@@ -87,7 +85,7 @@ public class Main {
 		}
 	}
 
-	private static boolean processCommand(final String[] args) throws ParseException, IOException {
+	private static boolean processCommand(final String[] args) throws ParseException {
 		if (args.length < 1) {
 			return false;
 		}
@@ -124,14 +122,14 @@ public class Main {
 		return options;
 	}
 
-
-//	private static void RunDebugScenario() throws ParseException {
-//		mainImpl(new String[] { "generate", "--pass=foo bar", "--prefixes=NA,NA2,NB,NC", "--output=sec_orig.dat" });
-//		mainImpl(new String[] { "reencrypt", "--input=sec_orig.dat", "--pass=foo bar", "--newPass=bar foo", "--output=sec.dat" });
-//		mainImpl(new String[] { "dump", "--pass=bar foo", "--input=sec.dat", "--showPrivate=true", "--filter=NA" });
-//		mainImpl(new String[] { "transfer", "--pass=bar foo", "--input=sec.dat", "--output=transfer.dat", "--time=4590033", "--sender=NA", "--recipient=NB", "--amount=1000000" });
-//		mainImpl(new String[] { "importance", "--pass=bar foo", "--input=sec.dat", "--output=importance.dat", "--time=4590033", "--sender=NA", "--remote=NC" });
-//	}
+	private static void RunDebugScenario() throws ParseException {
+		processCommand(new String[] { "generate", "--pass=foo bar", "--prefixes=NA,NA2,NB,NC", "--output=sec_orig.dat" });
+		processCommand(new String[] { "reencrypt", "--input=sec_orig.dat", "--pass=foo bar", "--newPass=bar foo", "--output=sec.dat" });
+		processCommand(new String[] { "dump", "--pass=bar foo", "--input=sec.dat", "--showPrivate=true", "--filter=NA" });
+		processCommand(new String[] { "transfer", "--pass=bar foo", "--input=sec.dat", "--output=transfer.dat", "--time=4590033", "--sender=NA", "--recipient=NB", "--amount=1000000" });
+		processCommand(new String[] { "transfer", "--pass=bar foo", "--input=sec.dat", "--output=transfer2.dat", "--time=4590033", "--sender=NA", "--recipient=NB", "--amount=1000000", "--message=\"enroll mercury 127.0.0.1\"" });
+		processCommand(new String[] { "importance", "--pass=bar foo", "--input=sec.dat", "--output=importance.dat", "--time=4590033", "--sender=NA", "--remote=NC" });
+	}
 
 	private static void OutputUsage(final Command command) {
 		System.out.println(String.format("*** %s ***", command.name()));

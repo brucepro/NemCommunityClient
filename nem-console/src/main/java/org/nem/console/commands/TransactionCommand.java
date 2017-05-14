@@ -5,7 +5,7 @@ import org.nem.console.models.AliasedKeyPair;
 import org.nem.console.utils.*;
 import org.nem.core.crypto.*;
 import org.nem.core.model.*;
-import org.nem.core.model.primitive.BlockHeight;
+import org.nem.core.model.primitive.*;
 import org.nem.core.time.TimeInstant;
 import org.nem.core.utils.HexEncoder;
 
@@ -49,7 +49,9 @@ public abstract class TransactionCommand implements Command {
 		System.out.println(String.format("     type: %d", transaction.getType()));
 		System.out.println(String.format("  version: %d", transaction.getVersion()));
 		System.out.println(String.format("   sender: %s", transaction.getSigner()));
-		System.out.println(String.format("      fee: %s", transaction.getFee()));
+
+		final Amount fee = transaction.getFee();
+		System.out.println(String.format("      fee: %s (%s uXem)", fee.getNumNem(), fee));
 	}
 
 	/**

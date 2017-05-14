@@ -33,7 +33,9 @@ public class TransferCommand extends TransactionCommand {
 
 		TransferTransactionAttachment attachment = null;
 		if (commandLine.hasOption("message")) {
-			final Message message = new PlainMessage(StringEncoder.getBytes(commandLine.getOptionValue("message")));
+			final String messageString = commandLine.getOptionValue("message");
+			System.out.println(String.format("  with message: %s", messageString));
+			final Message message = new PlainMessage(StringEncoder.getBytes(messageString));
 			attachment = new TransferTransactionAttachment(message);
 		}
 
