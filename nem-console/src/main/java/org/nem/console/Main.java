@@ -37,6 +37,22 @@ public class Main {
 		handle(args);
 	}
 
+	private static String[] parseArgumentsFromLine(final String line) {
+		final List<String> params = new ArrayList<>();
+		final String[] tokens = line.split(" ");
+
+		for (final String token : tokens) {
+			if (params.isEmpty() || token.startsWith("--")) { // new argument
+				params.add(token);
+			} else {
+				final String lastToken = params.get(params.size() - 1);
+				params.set(params.size() - 1, String.format("%s %s", lastToken, token));
+			}
+		}
+
+		return params.toArray(new String[] {});
+	}
+
 	private static void handle(final String[] args) throws ParseException, IOException {
 		final CommandLineParser parser = new PosixParser();
 		final Options options = mergeAllOptions();
@@ -65,7 +81,7 @@ public class Main {
 		if (commandLine.hasOption("file")) {
 			final File commandFile = new File(commandLine.getOptionValue("file"));
 			try (final Stream<String> lines = Files.lines(commandFile.toPath())) {
-				commandArgumentsList.addAll(lines.map(l -> l.split(" ")).collect(Collectors.toList()));
+				commandArgumentsList.addAll(lines.map(Main::parseArgumentsFromLine).collect(Collectors.toList()));
 			}
 		} else {
 			commandArgumentsList.add(args);
@@ -123,12 +139,12 @@ public class Main {
 	}
 
 	private static void RunDebugScenario() throws ParseException {
-		processCommand(new String[] { "generate", "--pass=foo bar", "--prefixes=NA,NA2,NB,NC", "--output=sec_orig.dat" });
-		processCommand(new String[] { "reencrypt", "--input=sec_orig.dat", "--pass=foo bar", "--newPass=bar foo", "--output=sec.dat" });
-		processCommand(new String[] { "dump", "--pass=bar foo", "--input=sec.dat", "--showPrivate=true", "--filter=NA" });
-		processCommand(new String[] { "transfer", "--pass=bar foo", "--input=sec.dat", "--output=transfer.dat", "--time=4590033", "--sender=NA", "--recipient=NB", "--amount=1000000" });
-		processCommand(new String[] { "transfer", "--pass=bar foo", "--input=sec.dat", "--output=transfer2.dat", "--time=4590033", "--sender=NA", "--recipient=NB", "--amount=1000000", "--message=\"enroll mercury 127.0.0.1\"" });
-		processCommand(new String[] { "importance", "--pass=bar foo", "--input=sec.dat", "--output=importance.dat", "--time=4590033", "--sender=NA", "--remote=NC" });
+		processCommand(parseArgumentsFromLine("generate --pass=foo bar --prefixes=NA,NA2,NB,NC --output=sec_orig.dat"));
+		processCommand(parseArgumentsFromLine("reencrypt --input=sec_orig.dat --pass=foo bar --newPass=bar foo --output=sec.dat"));
+		processCommand(parseArgumentsFromLine("dump --pass=bar foo --input=sec.dat --showPrivate=true --filter=NA"));
+		processCommand(parseArgumentsFromLine("transfer --pass=bar foo --input=sec.dat --output=transfer.dat --time=4590033 --sender=NA --recipient=NB --amount=1000000"));
+		processCommand(parseArgumentsFromLine("transfer --pass=bar foo --input=sec.dat --output=transfer2.dat --time=4590033 --sender=NA --recipient=NB --amount=1000000 --message=\"enroll mercury 127.0.0.1\""));
+		processCommand(parseArgumentsFromLine("importance --pass=bar foo --input=sec.dat --output=importance.dat --time=4590033 --sender=NA --remote=NC"));
 	}
 
 	private static void OutputUsage(final Command command) {
