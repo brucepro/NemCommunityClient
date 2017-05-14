@@ -102,7 +102,7 @@ public abstract class TransactionCommand implements Command {
 	private static void prepareAndSign(final Transaction transaction) {
 		final DefaultTransactionFeeCalculator calculator = new DefaultTransactionFeeCalculator(
 					id -> null,
-					() -> { return new BlockHeight(572_500); },
+					() -> new BlockHeight(1_000_000),
 					new BlockHeight(feeFork(NetworkInfos.getMainNetworkInfo().getVersion() << 24)));
 
 		transaction.setFee(calculator.calculateMinimumFee(transaction));
