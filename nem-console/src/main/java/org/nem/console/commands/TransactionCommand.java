@@ -99,11 +99,21 @@ public abstract class TransactionCommand implements Command {
 				: (network == NetworkInfos.getMijinNetworkInfo().getVersion() ? 1 : 572_500);
 	}
 
+	private static long secondFeeFork(final int version) {
+		final byte network = (byte)(version >> 24);
+		return network == NetworkInfos.getMainNetworkInfo().getVersion()
+				? 1_190_000
+				: (network == NetworkInfos.getMijinNetworkInfo().getVersion() ? 1 : 975_000);
+	}
+
 	private static void prepareAndSign(final Transaction transaction) {
 		final DefaultTransactionFeeCalculator calculator = new DefaultTransactionFeeCalculator(
-					id -> null,
-					() -> new BlockHeight(1_000_000),
-					new BlockHeight(feeFork(NetworkInfos.getMainNetworkInfo().getVersion() << 24)));
+				id -> null,
+				() -> new BlockHeight(1_190_000),
+				new BlockHeight[] {
+						new BlockHeight(feeFork(NetworkInfos.getMainNetworkInfo().getVersion() << 24)),
+						new BlockHeight(secondFeeFork(NetworkInfos.getMainNetworkInfo().getVersion() << 24))
+				});
 
 		transaction.setFee(calculator.calculateMinimumFee(transaction));
 		transaction.setDeadline(transaction.getTimeStamp().addHours(12));
