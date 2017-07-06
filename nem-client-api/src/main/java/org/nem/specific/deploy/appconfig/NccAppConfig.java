@@ -68,8 +68,10 @@ public class NccAppConfig {
 		NemGlobals.setTransactionFeeCalculator(new DefaultTransactionFeeCalculator(
 				id -> null,
 				() -> this.primaryNisConnector().forward(this.chainServices()::getChainHeightAsync),
-				new BlockHeight(feeFork(this.nccConfiguration().getNetworkInfo().getVersion() << 24))));
-
+				new BlockHeight[] {
+						new BlockHeight(feeFork(this.nccConfiguration().getNetworkInfo().getVersion() << 24)),
+						new BlockHeight(secondFeeFork(this.nccConfiguration().getNetworkInfo().getVersion() << 24))
+				}));
 	}
 
 	private static long feeFork(final int version) {
@@ -77,6 +79,13 @@ public class NccAppConfig {
 		return network == NetworkInfos.getMainNetworkInfo().getVersion()
 				? 875_000
 				: (network == NetworkInfos.getMijinNetworkInfo().getVersion() ? 1 : 572_500);
+	}
+
+	private static long secondFeeFork(final int version) {
+		final byte network = (byte)(version >> 24);
+		return network == NetworkInfos.getMainNetworkInfo().getVersion()
+				? 1_190_000
+				: (network == NetworkInfos.getMijinNetworkInfo().getVersion() ? 1 : 975_000);
 	}
 
 	@Bean
