@@ -1,3 +1,10 @@
+This build will accomplish the following: 
+continue using ncc wallet and storage functions on current start page and login. 
+migrate all webapp functions to nanowallet features
+
+determine which api calls can be depreciated. 
+
+
 NEM Community Client (NCC)
 ====================
 [![Build Status](https://travis-ci.org/NemProject/NemCommunityClient.svg?branch=master)](https://travis-ci.org/NemProject/NemCommunityClient)
